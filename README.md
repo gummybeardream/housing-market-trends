@@ -9,8 +9,6 @@ Create a housing market model to predict price trends
     
     Zillow API
         Public Data
-            Public Records
-            Neighborhood Data
             Real Estate Metrics 
 
     United States Census Bureau
