@@ -17,7 +17,7 @@ def remove_whitespace(dataframe):
 remove_whitespace(home_value_by_zip_code)
 
 #check if these two state columns match
-#print(home_value_by_zip_code['StateName'].equals(home_value_by_zip_code['State']))
+print(home_value_by_zip_code['StateName'].equals(home_value_by_zip_code['State']))
 
 #change column name from RegionID to Zipcode 
 home_value_by_zip_code = home_value_by_zip_code.rename(columns={'RegionID': 'Zipcode'})
@@ -45,13 +45,23 @@ home_value_by_zip_code_melted = pd.melt(
     )
 
 #convert Date column to datetime data type
+home_value_by_zip_code_melted['Date'] = pd.to_datetime(home_value_by_zip_code_melted['Date'])
 
-#extract month from the date 
-#create null dataframe view 
+#extract month from Date column
+home_value_by_zip_code_melted['Month'] = home_value_by_zip_code_melted['Date'].dt.month
 
+#extract year from Date column
+home_value_by_zip_code_melted['Year'] = home_value_by_zip_code_melted['Date'].dt.year
+
+#view dataset
 print(home_value_by_zip_code_melted.head(10))
 print(home_value_by_zip_code_melted.info())
 
+#find out if there are missing values
+#create null dataframe view 
 #should I round the number MedianHomeValue by 2 decimal places?
+#does not have a first row for the United States total 
 
+#plot the data without null values 
 
+#create dataframe without null values
