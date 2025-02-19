@@ -49,6 +49,11 @@ sales_inventory_by_city_melted['Year'] = sales_inventory_by_city_melted['Date'].
 #print(sales_inventory_by_city_melted.head(10))
 #print(sales_inventory_by_city_melted.info())
 
+#Create a dataframe with null values
+sales_inventory_null = sales_inventory_by_city_melted[sales_inventory_by_city_melted.isnull().any(axis=1)]
+print(sales_inventory_null.info())
+print(sales_inventory_null.head(10))
+
 #Plot number of HomesForSale over 12 months to look at seasonal trends
 #Create dataframe without null values
 sales_inventory_no_nulls = sales_inventory_by_city_melted.dropna()
@@ -56,10 +61,8 @@ sales_inventory_no_nulls = sales_inventory_by_city_melted.dropna()
 #Create copy of the dataframe with only the Month and HomesForSale columns. Drop the first row 
 inventory_barplot_columns = (sales_inventory_no_nulls[['Month','HomesForSale']].copy()).drop(index=0, inplace=False)
 
-#print(inventory_barplot_drop_row.head(10))
-#print(inventory_barplot_drop_row.info())
 #Descriptive statistics for sales_inventory dataset with no nulls
-print(inventory_barplot_columns.groupby('Month')['HomesForSale'].describe())
+#print(inventory_barplot_columns.groupby('Month')['HomesForSale'].describe())
 
 #Dateframe showing median or sum of HomesForSale grouped by month 
 inventory_by_month_median = inventory_barplot_columns.groupby(['Month']).median().reset_index()

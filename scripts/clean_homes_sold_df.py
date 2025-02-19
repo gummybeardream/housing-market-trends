@@ -48,9 +48,9 @@ homes_sold_by_city_melted['Year'] = homes_sold_by_city_melted['Date'].dt.year
 #print(homes_sold_by_city_melted.head(10))
 #print(homes_sold_by_city_melted.info())
 
-#Create a dataframe view with null values: there are about 10 rows with NaN
-null_df = homes_sold_by_city_melted[homes_sold_by_city_melted.isnull().any(axis=1)]
-print(null_df)
+#Create a dataframe with null values: there are about 10 rows with NaN
+homes_sold_null = homes_sold_by_city_melted[homes_sold_by_city_melted.isnull().any(axis=1)]
+print(homes_sold_null)
 
 #Check on whether replacing 1191 null values with median/mean values will skew the data. compare both graphs
 #Convert HomesSold column values to int64. currently cannot convert because of NaN values
@@ -76,4 +76,5 @@ total_homes_sold_by_month = homes_sold_barplot_columns.groupby(['Month']).sum().
 
 print(median_homes_sold_by_month.head(12))
 print(total_homes_sold_by_month.head(12))
+
 
