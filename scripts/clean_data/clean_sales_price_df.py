@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 #creating a dataframe from the csv file
-home_sale_prices = pd.read_csv("data/raw/Zillow_monthly_sales_inventory_by_city.csv")
+home_sale_prices = pd.read_csv("data/raw/Zillow_monthly_median_sales_price_by_city.csv")
 
 #loop to remove whitespace from columns with object datatypes
 def remove_whitespace(dataframe):
@@ -44,11 +44,30 @@ home_sale_prices_melted['Month'] = home_sale_prices_melted['Date'].dt.month
 #Extract year from Date column
 home_sale_prices_melted['Year'] = home_sale_prices_melted['Date'].dt.year
 
-#view dataset
-print(home_sale_prices_melted.head(10))
-print(home_sale_prices_melted.info())
+#View dataset
+#print(home_sale_prices_melted.head(10))
+#print(home_sale_prices_melted.info())
 
-#To check on whether replacing 1191 null values with median/mean values will skew the data. compare both graphs 
-#dig into which locations we are missing data from
+#Create a dataframe with null values 
+sale_prices_null = home_sale_prices_melted[home_sale_prices_melted.isnull().any(axis=1)]
+#print(sale_prices_null.head())
+#print(sale_prices_null.info())
+
+#Plot MedianSalePrice over years (2018-2024) to look at trends. Create dataframe without null values
+sale_prices_no_nulls = home_sale_prices_melted.dropna()
+
+#Create copy of dataframe with only the Year and MedianSalePrices columns. Drop the first row
+sales_prices_columns = (sale_prices_no_nulls[['Year','City', 'MedianSalePrice']].copy()).drop(index=0, inplace=False)
+#print(sales_prices_columns.groupby('Year')['MedianSalePrice'].describe())
+
+#Dataframe showing median or average of MedianSalePrice grouped by Year 
+sale_prices_by_year_median = sales_prices_columns.groupby(['City', 'Year']).median().reset_index()
+sale_prices_by_year_avg = sales_prices_columns.groupby(['City', 'Year']).mean().reset_index()
+
+print(sale_prices_by_year_median.head(20))
+print(sale_prices_by_year_avg.head(20))
+
+
+#To check on whether replacing 6410 null values with city median/mean values will skew the data. compare null v no null
 #Reorder the columns at the end with a new df name.
 

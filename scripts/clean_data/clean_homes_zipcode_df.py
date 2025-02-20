@@ -57,11 +57,4 @@ home_value_by_zip_code_melted['Year'] = home_value_by_zip_code_melted['Date'].dt
 print(home_value_by_zip_code_melted.head(10))
 print(home_value_by_zip_code_melted.info())
 
-#find out if there are missing values
-#create null dataframe view 
-#should I round the number MedianHomeValue by 2 decimal places?
-#does not have a first row for the United States total 
-
-#plot the data without null values 
-
-#create dataframe without null values
+home_value_by_zip_code_melted.to_csv("data/processed/home_value_by_zip_code_melted.csv")
