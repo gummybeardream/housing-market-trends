@@ -17,7 +17,7 @@ def remove_whitespace(dataframe):
 remove_whitespace(home_value_by_zip_code)
 
 #check if these two state columns match
-print(home_value_by_zip_code['StateName'].equals(home_value_by_zip_code['State']))
+#print(home_value_by_zip_code['StateName'].equals(home_value_by_zip_code['State']))
 
 #change column name from RegionID to Zipcode 
 home_value_by_zip_code = home_value_by_zip_code.rename(columns={'RegionID': 'Zipcode'})
@@ -53,8 +53,37 @@ home_value_by_zip_code_melted['Month'] = home_value_by_zip_code_melted['Date'].d
 #extract year from Date column
 home_value_by_zip_code_melted['Year'] = home_value_by_zip_code_melted['Date'].dt.year
 
-#view dataset
-print(home_value_by_zip_code_melted.head(10))
-print(home_value_by_zip_code_melted.info())
+#add Country column with United States as values 
+country_value = 'United States'
+home_value_by_zip_code_melted['Country'] = country_value
 
-home_value_by_zip_code_melted.to_csv("data/processed/home_value_by_zip_code_melted.csv")
+#final dataframe to send to Tableau 
+home_value_final = home_value_by_zip_code_melted[['Country', 'Month', 'Year', 'State', 'City', 'MedianHomeValue','Zipcode']]
+
+#view dataset
+#print(home_value_final.head(10))
+#print(home_value_final.info())
+
+#null_values check 
+null_rows = home_value_by_zip_code_melted[home_value_by_zip_code_melted.isnull().any(axis=1)]
+#print(null_rows.head(10))
+
+#number of null values 
+total_null = home_value_by_zip_code_melted.isnull().sum().sum()
+#print(total_null)
+
+null_per_column = home_value_by_zip_code_melted.isnull().sum()
+#print(null_per_column)
+
+#check original dataframe for nulls 
+og_null_rows = home_value_by_zip_code[home_value_by_zip_code.isnull().any(axis=1)]
+#print(og_null_rows.head(10))
+
+og_total_null = home_value_by_zip_code.isnull().sum().sum()
+print(og_total_null)
+
+og_null_per_column = home_value_by_zip_code.isnull().sum()
+#print(og_null_per_column)
+
+#Run to convert dataframe to csv file when dataset is ready to go to Tableau 
+#home_value_by_zip_code_melted.to_csv("data/processed/home_value_by_zip_code_melted.csv")
