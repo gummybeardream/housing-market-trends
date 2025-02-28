@@ -129,6 +129,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.env*
+*.env
 
 # Spyder project settings
 .spyderproject
@@ -166,3 +168,6 @@ cython_debug/
 
 # Ignore macOS stuff
 .DS_Store
+
+#Ignore repo cleaning tool
+bfg*.jar
