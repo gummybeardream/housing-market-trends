@@ -1,10 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-#creating a dataframe from the csv file
+#Create a dataframe from the csv file
 home_value_by_zip_code=pd.read_csv("data/raw/ZHVI_all_homes_by_zipcode.csv")
 
-#loop to remove whitespace from columns with object datatypes
+#Loop to remove whitespace from columns with object datatypes
 def remove_whitespace(dataframe):
     for column in dataframe.columns:
         #check datatype of each column 
@@ -16,27 +16,27 @@ def remove_whitespace(dataframe):
             pass
 remove_whitespace(home_value_by_zip_code)
 
-#check if these two state columns match
+#Check if these two state columns match
 #print(home_value_by_zip_code['StateName'].equals(home_value_by_zip_code['State']))
 
-#change column name from RegionID to Zipcode 
+#Change column name from RegionID to Zipcode 
 home_value_by_zip_code = home_value_by_zip_code.rename(columns={'RegionID': 'Zipcode'})
 
-#convert Zipcode from integer to string 
+#Convert Zipcode from integer to string 
 home_value_by_zip_code['Zipcode'] = home_value_by_zip_code['Zipcode'].astype(str)
 
-#check if the length of all zipcode values is 4 (0-4)
+#Check if the length of all zipcode values is 4 (0-4)
 '''check_zipcode_list = list((home_value_by_zip_code['Zipcode'].str.len() == 5).all())
 zipcode_count = check_zipcode_list.count(1)
 print(zipcode_count)'''
 
-#convert SizeRank from integer to string 
+#Convert SizeRank from integer to string 
 home_value_by_zip_code['SizeRank'] = home_value_by_zip_code['SizeRank'].astype(str)
 
-#convert RegionName from integer to string
+#Convert RegionName from integer to string
 home_value_by_zip_code['RegionName'] = home_value_by_zip_code['RegionName'].astype(str)
 
-#transform dataset from wide to long data format
+#Transform dataset from wide to long data format
 home_value_by_zip_code_melted = pd.melt(
     home_value_by_zip_code, 
     id_vars=['Zipcode','SizeRank','RegionName','RegionType','StateName','State','City','Metro','CountyName'], 
@@ -44,46 +44,45 @@ home_value_by_zip_code_melted = pd.melt(
     value_name='MedianHomeValue'
     )
 
-#convert Date column to datetime data type
+#Convert Date column to datetime data type
 home_value_by_zip_code_melted['Date'] = pd.to_datetime(home_value_by_zip_code_melted['Date'])
 
-#extract month from Date column
+#Extract month from Date column
 home_value_by_zip_code_melted['Month'] = home_value_by_zip_code_melted['Date'].dt.month
 
-#extract year from Date column
+#Extract year from Date column
 home_value_by_zip_code_melted['Year'] = home_value_by_zip_code_melted['Date'].dt.year
 
-#add Country column with United States as values 
+#Add Country column with United States as values 
 country_value = 'United States'
 home_value_by_zip_code_melted['Country'] = country_value
 
-#final dataframe to send to Tableau 
+#Create final dataframe to send to Tableau 
 home_value_final = home_value_by_zip_code_melted[['Country', 'Month', 'Year', 'State', 'City', 'MedianHomeValue','Zipcode']]
 
-#view dataset
+#View dataset
 #print(home_value_final.head(10))
 #print(home_value_final.info())
 
-#null_values check 
+#Display number of rows that have a null value
 null_rows = home_value_by_zip_code_melted[home_value_by_zip_code_melted.isnull().any(axis=1)]
 #print(null_rows.head(10))
 
-#number of null values 
+#Display total number of null values and the number of nulls in each column
 total_null = home_value_by_zip_code_melted.isnull().sum().sum()
 #print(total_null)
-
 null_per_column = home_value_by_zip_code_melted.isnull().sum()
 #print(null_per_column)
 
-#check original dataframe for nulls 
+#Display the number of rows that have null_values in the original dataframe
 og_null_rows = home_value_by_zip_code[home_value_by_zip_code.isnull().any(axis=1)]
 #print(og_null_rows.head(10))
 
+#Display the total number of null values and the number of nulls in each column
 og_total_null = home_value_by_zip_code.isnull().sum().sum()
-print(og_total_null)
-
+#print(og_total_null)
 og_null_per_column = home_value_by_zip_code.isnull().sum()
 #print(og_null_per_column)
 
 #Run to convert dataframe to csv file when dataset is ready to go to Tableau 
-#home_value_by_zip_code_melted.to_csv("data/processed/home_value_by_zip_code_melted.csv")
+#home_value_final.to_csv("data/processed/home_value_final.csv")

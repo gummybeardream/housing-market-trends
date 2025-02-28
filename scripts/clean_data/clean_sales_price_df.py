@@ -1,10 +1,10 @@
 import pandas as pd 
 import matplotlib.pyplot as plt
 
-#creating a dataframe from the csv file
+#Creating a dataframe from the csv file
 home_sale_prices = pd.read_csv("data/raw/Zillow_monthly_median_sales_price_by_city.csv")
 
-#loop to remove whitespace from columns with object datatypes
+#Loop to remove whitespace from columns with object datatypes
 def remove_whitespace(dataframe):
     for column in dataframe.columns:
         #check datatype of each column 
@@ -16,19 +16,19 @@ def remove_whitespace(dataframe):
             pass
 remove_whitespace(home_sale_prices) 
 
-#convert RegionID from integer to string
+#Convert RegionID from integer to string
 home_sale_prices['RegionID'] = home_sale_prices['RegionID'].astype(str)
 
-#convert SizeRank from integer to string 
+#Convert SizeRank from integer to string 
 home_sale_prices['SizeRank'] = home_sale_prices['SizeRank'].astype(str)
 
-#extract city name from RegionName to make a City column
+#Extract city name from RegionName to make a City column
 home_sale_prices['City'] = home_sale_prices['RegionName'].str[:-4]
 
-#change the first value in City and StateName columns to United States 
+#Change the first value in City and StateName columns to United States 
 home_sale_prices.at[0, ('StateName','City')] = 'United States'
 
-#transform dataset from wide to long 
+#Transform dataset from wide to long 
 home_sale_prices_melted = pd.melt(
     home_sale_prices, id_vars= ['RegionID','SizeRank','RegionName','RegionType','StateName','City'],
     var_name= 'Date',
