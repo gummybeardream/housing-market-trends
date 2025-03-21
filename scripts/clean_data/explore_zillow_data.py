@@ -8,7 +8,7 @@ monthly_sales_inventory = pd.read_csv("data/raw/Zillow_monthly_sales_inventory_b
 
 def zillow_data_summary(dataset_name):
     print(dataset_name.head(10))
-    print(dataset_name.info())
+    print(dataset_name.info(show_counts=True))
     #print(dataset_name.describe())
     #print(dataset_name.shape)
     #print(dataset_name.size)
