@@ -53,7 +53,7 @@ home_value_by_zip_code_melted['Month'] = home_value_by_zip_code_melted['Date'].d
 #Extract year from Date column
 home_value_by_zip_code_melted['Year'] = home_value_by_zip_code_melted['Date'].dt.year
 
-#Add Country column with United States as values 
+#Add Country column with United States as the only value
 country_value = 'United States'
 home_value_by_zip_code_melted['Country'] = country_value
 
@@ -74,15 +74,39 @@ total_null = home_value_by_zip_code_melted.isnull().sum().sum()
 null_per_column = home_value_by_zip_code_melted.isnull().sum()
 #print(null_per_column)
 
-#Display the number of rows that have null_values in the original dataframe
-og_null_rows = home_value_by_zip_code[home_value_by_zip_code.isnull().any(axis=1)]
-#print(og_null_rows.head(10))
-
 #Display the total number of null values and the number of nulls in each column
 og_total_null = home_value_by_zip_code.isnull().sum().sum()
 #print(og_total_null)
-og_null_per_column = home_value_by_zip_code.isnull().sum()
-#print(og_null_per_column)
+
+#Visualize missing values to look at time-based and geographical trends 
+
+#Create dataframe of missing values grouped by year
+nulls_by_year = null_rows[null_rows['MedianHomeValue'].isnull()]\
+    .groupby('Year') \
+    .size() \
+    .reset_index(name='MissingValues')
+#print(nulls_by_year)
+
+#Create dataframe of missing values grouped by month 
+nulls_by_month = null_rows[null_rows['MedianHomeValue'].isnull()]\
+    .groupby('Month')\
+    .size()\
+    .reset_index(name='MissingValues')
+#print(nulls_by_month)
+
+#Create dataframe of missing values grouped by state
+nulls_by_state = null_rows[null_rows['MedianHomeValue'].isnull()]\
+    .groupby(['State', 'City'])\
+    .size()\
+    .reset_index(name='MissingValues')\
+    .sort_values(by='MissingValues', ascending=False)
+#print(nulls_by_state.head(10))
+#print(null_rows.info(show_counts=True))
+
+city_df = null_rows['City'].unique()
+check_city_null = pd.DataFrame(city_df, columns=['UniqueCity'])
+#print(check_city_null.info(show_counts=True))
+#print(check_city_null.head(30))
 
 #Run to convert dataframe to csv file when dataset is ready to go to Tableau 
 #home_value_final.to_csv("data/processed/home_value_final.csv")
