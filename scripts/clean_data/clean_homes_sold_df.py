@@ -41,6 +41,9 @@ homes_sold_by_city_melted['Date'] = pd.to_datetime(homes_sold_by_city_melted['Da
 #Extract month from Date column
 homes_sold_by_city_melted['Month'] = homes_sold_by_city_melted['Date'].dt.month
 
+#Extract month name from Date Column
+homes_sold_by_city_melted['MonthName'] = homes_sold_by_city_melted['Date'].dt.month_name()
+
 #Extract year from Date column
 homes_sold_by_city_melted['Year'] = homes_sold_by_city_melted['Date'].dt.year
 
@@ -49,7 +52,7 @@ country_value = "United States"
 homes_sold_by_city_melted['Country'] = country_value
 
 #View dataset
-print(homes_sold_by_city_melted.head(10))
+#print(homes_sold_by_city_melted.head(10))
 #print(homes_sold_by_city_melted.info())
 
 #Create a dataframe with null values: there are about 10 rows with NaN
@@ -63,7 +66,8 @@ homes_sold_no_nulls = homes_sold_by_city_melted.dropna()
 #print(homes_sold_no_nulls.info())
 
 #Convert HomesSold values from decimal to whole numbers
-homes_sold_no_nulls['HomesSold'] = homes_sold_no_nulls['HomesSold'].round().astype(int)
+homes_sold_no_nulls.loc[:,'HomesSold'] = homes_sold_no_nulls['HomesSold'].round().astype(int)
+homes_sold_no_nulls['HomesSold'] = homes_sold_no_nulls['HomesSold'].astype(int)
 
 #Create copy of the dataframe with Month and HomesSold columns. Drop the first row 
 homes_sold_barplot_columns = (homes_sold_no_nulls[['Month','HomesSold']].copy()).drop(index=0, inplace=False)
@@ -80,7 +84,7 @@ total_homes_sold_by_month = homes_sold_barplot_columns.groupby(['Month']).sum().
 #print(total_homes_sold_by_month.head(12))
 
 #Create final dataframe to send to Tableau
-homes_sold_final = homes_sold_no_nulls[['Country','RegionID','StateName','City','HomesSold', 'Date', 'Month','Year']].drop(index=0, inplace=False)
+homes_sold_final = homes_sold_no_nulls[['Country','RegionID','StateName','City','HomesSold', 'Date', 'Month','MonthName','Year']].drop(index=0, inplace=False)
 #print(homes_sold_final.head())
 #print(homes_sold_final.info())
 
