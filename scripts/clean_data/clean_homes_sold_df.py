@@ -88,7 +88,6 @@ homes_sold_final = homes_sold_no_nulls[['Country','RegionID','StateName','City',
 #print(homes_sold_final.head())
 #print(homes_sold_final.info())
 
-#Run to convert dataframe to csv file when dataset is ready for Tableau
-homes_sold_final.to_csv("data/processed/homes_sold_final.csv")
-
+#Run to convert dataframe to CSV file when dataset is ready for Tableau
+#homes_sold_final.to_csv("data/processed/homes_sold_final.csv")
 
