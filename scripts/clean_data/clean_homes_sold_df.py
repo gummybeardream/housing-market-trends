@@ -51,17 +51,31 @@ homes_sold_by_city_melted['Year'] = homes_sold_by_city_melted['Date'].dt.year
 country_value = "United States"
 homes_sold_by_city_melted['Country'] = country_value
 
+#Drop rows if United States is a value for the StateName or City column
+homes_sold_by_city_melted = homes_sold_by_city_melted[~(homes_sold_by_city_melted['StateName'].str.contains(country_value, na=False) | homes_sold_by_city_melted['City'].str.contains(country_value, na=False))]
+
+#Validate that StateName column does not contain United States as a value
+check_state_column_df = homes_sold_by_city_melted[homes_sold_by_city_melted['StateName'].str.contains('United States')]
+print(check_state_column_df.info())
+print(check_state_column_df.head(10))
+
+#Validate that the City column does not contain United States as a value
+check_city_column_df = homes_sold_by_city_melted[homes_sold_by_city_melted['City'].str.contains('United States')]
+print(check_city_column_df.info())
+print(check_city_column_df.head(10))
+
 #View dataset
-#print(homes_sold_by_city_melted.head(10))
-#print(homes_sold_by_city_melted.info())
+print(homes_sold_by_city_melted.head(10))
+print(homes_sold_by_city_melted.info())
+#print(homes_sold_by_city_melted.describe())
 
 #Create a dataframe with null values: there are about 10 rows with NaN
 homes_sold_null = homes_sold_by_city_melted[homes_sold_by_city_melted.isnull().any(axis=1)]
 #print(homes_sold_null)
 
-#Plot number of HomesSold over 12 months to look at seasonal trends
 #Create dataframe without null values
 homes_sold_no_nulls = homes_sold_by_city_melted.dropna()
+
 #Check if nulls were dropped
 #print(homes_sold_no_nulls.info())
 
@@ -69,8 +83,19 @@ homes_sold_no_nulls = homes_sold_by_city_melted.dropna()
 homes_sold_no_nulls.loc[:,'HomesSold'] = homes_sold_no_nulls['HomesSold'].round().astype(int)
 homes_sold_no_nulls['HomesSold'] = homes_sold_no_nulls['HomesSold'].astype(int)
 
+#Create final dataframe to send to Tableau
+homes_sold_final = homes_sold_no_nulls[['Country','RegionID','StateName','City','HomesSold', 'Date', 'Month','MonthName','Year']]
+
+#print(homes_sold_final.head())
+#print(homes_sold_final.info())
+
+#Run to convert dataframe to CSV file when dataset is ready for Tableau
+homes_sold_final.to_csv("data/processed/homes_sold_final.csv")
+
+
+#Plot number of HomesSold over 12 months to look at seasonal trends
 #Create copy of the dataframe with Month and HomesSold columns. Drop the first row 
-homes_sold_barplot_columns = (homes_sold_no_nulls[['Month','HomesSold']].copy()).drop(index=0, inplace=False)
+homes_sold_barplot_columns = (homes_sold_no_nulls[['Month','HomesSold']].copy())
 
 #Check if dataframe copied properly. Look at descriptive statistics 
 #print(homes_sold_barplot_columns.head())
@@ -82,12 +107,3 @@ total_homes_sold_by_month = homes_sold_barplot_columns.groupby(['Month']).sum().
 
 #print(median_homes_sold_by_month.head(12))
 #print(total_homes_sold_by_month.head(12))
-
-#Create final dataframe to send to Tableau
-homes_sold_final = homes_sold_no_nulls[['Country','RegionID','StateName','City','HomesSold', 'Date', 'Month','MonthName','Year']].drop(index=0, inplace=False)
-#print(homes_sold_final.head())
-#print(homes_sold_final.info())
-
-#Run to convert dataframe to CSV file when dataset is ready for Tableau
-#homes_sold_final.to_csv("data/processed/homes_sold_final.csv")
-
