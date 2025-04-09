@@ -51,6 +51,19 @@ home_sale_prices_melted['Year'] = home_sale_prices_melted['Date'].dt.year
 country_value = 'United States'
 home_sale_prices_melted['Country'] = country_value
 
+#Drop rows if United States is a value in the StateName or City column
+home_sale_prices_melted = home_sale_prices_melted[~(home_sale_prices_melted['StateName'].str.contains(country_value, na=False) | home_sale_prices_melted['City'].str.contains(country_value, na=False))]
+
+#Validate that StateName column does not contain United States as a value
+check_state_column = home_sale_prices_melted[home_sale_prices_melted['StateName'].str.contains('United States')]
+print(check_state_column.info())
+print(check_state_column.head(10))
+
+#Validate that City column does not contain United States as a value
+check_city_column = home_sale_prices_melted[home_sale_prices_melted['City'].str.contains('United States')]
+print(check_city_column.info())
+print(check_city_column.head(10))
+
 #View dataset
 #print(home_sale_prices_melted.head(10))
 #print(home_sale_prices_melted.info())

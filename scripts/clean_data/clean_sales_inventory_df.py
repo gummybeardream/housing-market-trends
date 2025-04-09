@@ -55,7 +55,7 @@ sales_inventory_by_city_melted['Country'] = country_value
 #Drop rows if United States is a value in the StateName or City column
 sales_inventory_by_city_melted = sales_inventory_by_city_melted[~(sales_inventory_by_city_melted['StateName'].str.contains(country_value, na=False) | sales_inventory_by_city_melted['City'].str.contains(country_value, na=False))]
 
-#Validate that StateName column does not contain United States as a value. There are 82 rows that contain united states 
+#Validate that StateName column does not contain United States as a value
 check_state_column_df = sales_inventory_by_city_melted[sales_inventory_by_city_melted['StateName'].str.contains('United States')]
 print(check_state_column_df.info())
 print(check_state_column_df.head(10))
