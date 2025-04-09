@@ -52,6 +52,19 @@ sales_inventory_by_city_melted['Year'] = sales_inventory_by_city_melted['Date'].
 country_value = 'United States'
 sales_inventory_by_city_melted['Country'] = country_value
 
+#Drop rows if United States is a value in the StateName or City column
+sales_inventory_by_city_melted = sales_inventory_by_city_melted[~(sales_inventory_by_city_melted['StateName'].str.contains(country_value, na=False) | sales_inventory_by_city_melted['City'].str.contains(country_value, na=False))]
+
+#Validate that StateName column does not contain United States as a value. There are 82 rows that contain united states 
+check_state_column_df = sales_inventory_by_city_melted[sales_inventory_by_city_melted['StateName'].str.contains('United States')]
+print(check_state_column_df.info())
+print(check_state_column_df.head(10))
+
+#Validate that the City column does not contain United States as a value
+check_city_column_df = sales_inventory_by_city_melted[sales_inventory_by_city_melted['City'].str.contains('United States')]
+print(check_city_column_df.info())
+print(check_city_column_df.head(10))
+
 #View dataset
 #print(sales_inventory_by_city_melted.head(10))
 #print(sales_inventory_by_city_melted.info())
@@ -71,16 +84,17 @@ sales_inventory_no_nulls = sales_inventory_by_city_melted.dropna()
 sales_inventory_no_nulls.loc[:,'ActiveListings'] = sales_inventory_no_nulls['ActiveListings'].round().astype(int)
 sales_inventory_no_nulls['ActiveListings'] = sales_inventory_no_nulls['ActiveListings'].astype(int)
 
-#Create final dataframe to send to Tableau. Drop the first row
-sales_inventory_final = sales_inventory_no_nulls[['Country', 'RegionID', 'StateName', 'City' , 'ActiveListings', 'Date', 'Month', 'MonthName', 'Year']].drop(index=0, inplace=False)
+#Create final dataframe to send to Tableau
+sales_inventory_final = sales_inventory_no_nulls[['Country', 'RegionID', 'StateName', 'City' , 'ActiveListings', 'Date', 'Month', 'MonthName', 'Year']]
 #print(sales_inventory_final.head())
+#print(sales_inventory_final.info())
 
 #Run to convert dataframe to CSV file when dataset is ready for Tableau
 #sales_inventory_final.to_csv("data/processed/sales_inventory_final.csv")
 
 #Plot total number of ActiveListings over 12 months to look at seasonal trends
 #Create copy of the dataframe with only the Month and HomesForSale columns. Drop the first row 
-inventory_barplot_columns = (sales_inventory_no_nulls[['Month','ActiveListings']].copy()).drop(index=0, inplace=False)
+inventory_barplot_columns = sales_inventory_no_nulls[['Month','ActiveListings']].copy()
 
 #Descriptive statistics for sales_inventory dataset with no nulls
 #print(inventory_barplot_columns.groupby('Month')['ActiveListings'].describe())
