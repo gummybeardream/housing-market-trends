@@ -41,8 +41,15 @@ home_sale_prices_melted['Date'] = pd.to_datetime(home_sale_prices_melted['Date']
 #Extract month from Date column 
 home_sale_prices_melted['Month'] = home_sale_prices_melted['Date'].dt.month
 
+#Extract month name from Date column
+home_sale_prices_melted['MonthName'] = home_sale_prices_melted['Date'].dt.month_name()
+
 #Extract year from Date column
 home_sale_prices_melted['Year'] = home_sale_prices_melted['Date'].dt.year
+
+#Country column with United States as the only value
+country_value = 'United States'
+home_sale_prices_melted['Country'] = country_value
 
 #View dataset
 #print(home_sale_prices_melted.head(10))
@@ -56,18 +63,18 @@ sale_prices_null = home_sale_prices_melted[home_sale_prices_melted.isnull().any(
 #Plot MedianSalePrice over years (2018-2024) to look at trends. Create dataframe without null values
 sale_prices_no_nulls = home_sale_prices_melted.dropna()
 
-#Create copy of dataframe with only the Year and MedianSalePrices columns. Drop the first row
-sales_prices_columns = (sale_prices_no_nulls[['Year','City', 'MedianSalePrice']].copy()).drop(index=0, inplace=False)
+#Create copy of dataframe with only the Year and MedianSalePrices columns
+sales_prices_columns = sale_prices_no_nulls[['Year','City', 'MedianSalePrice']].copy()
 #print(sales_prices_columns.groupby('Year')['MedianSalePrice'].describe())
 
 #Dataframe showing median or average of MedianSalePrice grouped by Year 
 sale_prices_by_year_median = sales_prices_columns.groupby(['City', 'Year']).median().reset_index()
 sale_prices_by_year_avg = sales_prices_columns.groupby(['City', 'Year']).mean().reset_index()
 
-print(sale_prices_by_year_median.head(20))
-print(sale_prices_by_year_avg.head(20))
+#print(sale_prices_by_year_median.head(20))
+#print(sale_prices_by_year_avg.head(20))
+
+#To check on whether replacing 6410 null values with city median/mean values will skew the data
 
 
-#To check on whether replacing 6410 null values with city median/mean values will skew the data. compare null v no null
-#Reorder the columns at the end with a new df name.
 
