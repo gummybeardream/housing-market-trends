@@ -71,17 +71,26 @@ check_city_column = home_value_by_zip_code_melted[home_value_by_zip_code_melted[
 #print(check_city_column.head(10))
 
 #View dataset
-#print(home_value_final.head(10))
-#print(home_value_final.info())
+#print(home_value_by_zip_code_melted.head(10))
+#print(home_value_by_zip_code_melted.info(show_counts=True))
+
+#Create dataframe without null values 
+home_value_no_nulls = home_value_by_zip_code_melted.dropna()
+#print(home_value_no_nulls.info(show_counts=True))
+#print(home_value_no_nulls.head(10))
 
 #Create final dataframe to send to Tableau 
-home_value_final = home_value_by_zip_code_melted[['Country', 'Month', 'Year', 'State', 'City', 'MedianHomeValue','Zipcode']]
+home_value_final = home_value_no_nulls[['Country', 'Zipcode', 'StateName', 'City', 'MedianHomeValue','Date', 'Month', 'MonthName', 'Year']]
+#print(home_value_final.info(show_counts=True))
+#print(home_value_final.head(10))
 
+#Run to convert dataframe to CSV file when dataset is ready to go to Tableau 
+#home_value_final.to_csv("data/processed/home_value_final.csv")
 
 #Display number of rows that have a null value
 null_rows = home_value_by_zip_code_melted[home_value_by_zip_code_melted.isnull().any(axis=1)]
 #print(null_rows.head(10))
-print(null_rows.info(show_counts=True))
+#print(null_rows.info(show_counts=True))
 
 #Display total number of null values and the number of nulls in each column
 total_null = home_value_by_zip_code_melted.isnull().sum().sum()
@@ -122,5 +131,3 @@ check_city_null = pd.DataFrame(city_df, columns=['UniqueCity'])
 #print(check_city_null.info(show_counts=True))
 #print(check_city_null.head(30))
 
-#Run to convert dataframe to csv file when dataset is ready to go to Tableau 
-#home_value_final.to_csv("data/processed/home_value_final.csv")
