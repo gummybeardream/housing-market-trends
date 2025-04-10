@@ -68,14 +68,26 @@ print(check_city_column.head(10))
 #print(home_sale_prices_melted.head(10))
 #print(home_sale_prices_melted.info())
 
+#Create dataframe without null values
+sale_prices_no_nulls = home_sale_prices_melted.dropna()
+#print(sale_prices_no_nulls.head())
+#print(sale_prices_no_nulls.info())
+
+#Create final dataframe to send to Tableau
+sale_prices_final = sale_prices_no_nulls[['Country', 'RegionID', 'StateName', 'City', 'MedianSalePrice', 'Date', 'Month', 'MonthName', 'Year']]
+print(sale_prices_final.info())
+print(sale_prices_final.head())
+
+#Run to convert dataframe to CSV file when dataset is ready for Tableau
+#sale_prices_final.to_csv("data/processed/sale_prices_final.csv")
+
+
 #Create a dataframe with null values 
 sale_prices_null = home_sale_prices_melted[home_sale_prices_melted.isnull().any(axis=1)]
 #print(sale_prices_null.head())
 #print(sale_prices_null.info())
 
-#Plot MedianSalePrice over years (2018-2024) to look at trends. Create dataframe without null values
-sale_prices_no_nulls = home_sale_prices_melted.dropna()
-
+#Plot MedianSalePrice over years (2018-2024) to look at trends. 
 #Create copy of dataframe with only the Year and MedianSalePrices columns
 sales_prices_columns = sale_prices_no_nulls[['Year','City', 'MedianSalePrice']].copy()
 #print(sales_prices_columns.groupby('Year')['MedianSalePrice'].describe())
