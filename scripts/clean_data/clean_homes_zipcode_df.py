@@ -50,6 +50,9 @@ home_value_by_zip_code_melted['Date'] = pd.to_datetime(home_value_by_zip_code_me
 #Extract month from Date column
 home_value_by_zip_code_melted['Month'] = home_value_by_zip_code_melted['Date'].dt.month
 
+#Extract month name from Date column
+home_value_by_zip_code_melted['MonthName'] = home_value_by_zip_code_melted['Date'].dt.month_name()
+
 #Extract year from Date column
 home_value_by_zip_code_melted['Year'] = home_value_by_zip_code_melted['Date'].dt.year
 
