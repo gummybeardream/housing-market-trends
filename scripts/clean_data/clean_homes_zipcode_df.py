@@ -60,16 +60,28 @@ home_value_by_zip_code_melted['Year'] = home_value_by_zip_code_melted['Date'].dt
 country_value = 'United States'
 home_value_by_zip_code_melted['Country'] = country_value
 
-#Create final dataframe to send to Tableau 
-home_value_final = home_value_by_zip_code_melted[['Country', 'Month', 'Year', 'State', 'City', 'MedianHomeValue','Zipcode']]
+#Validate that the StateName column does not contain United States as a value
+check_state_column = home_value_by_zip_code_melted[home_value_by_zip_code_melted['StateName'].str.contains('United States')]
+#print(check_state_column.info())
+#print(check_state_column.head(10))
+
+#Validate that City column does not contain United States as a value
+check_city_column = home_value_by_zip_code_melted[home_value_by_zip_code_melted['City'].str.contains('United States')]
+#print(check_city_column.info())
+#print(check_city_column.head(10))
 
 #View dataset
 #print(home_value_final.head(10))
 #print(home_value_final.info())
 
+#Create final dataframe to send to Tableau 
+home_value_final = home_value_by_zip_code_melted[['Country', 'Month', 'Year', 'State', 'City', 'MedianHomeValue','Zipcode']]
+
+
 #Display number of rows that have a null value
 null_rows = home_value_by_zip_code_melted[home_value_by_zip_code_melted.isnull().any(axis=1)]
 #print(null_rows.head(10))
+print(null_rows.info(show_counts=True))
 
 #Display total number of null values and the number of nulls in each column
 total_null = home_value_by_zip_code_melted.isnull().sum().sum()
@@ -82,7 +94,6 @@ og_total_null = home_value_by_zip_code.isnull().sum().sum()
 #print(og_total_null)
 
 #Visualize missing values to look at time-based and geographical trends 
-
 #Create dataframe of missing values grouped by year
 nulls_by_year = null_rows[null_rows['MedianHomeValue'].isnull()]\
     .groupby('Year') \
