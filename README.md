@@ -1,13 +1,13 @@
 # 🏡 Housing Market Dashboard
 
-An interactive Tableau dashboard built with Zillow data (2008 - 2024) to help homebuyers to identify high growth ZIP codes, assess affordability, and observe seasonal price trends. 
+An interactive Tableau dashboard built with Zillow data (2008 - 2024) to help homebuyers to identify high growth ZIP codes, assess affordability, and observe seasonal price trends.
 
 ## Project Objective
 
 This dashboard empowers homebuyers with data-driven insights to make informed decisions based on answers to these questions: 
 - Which zip codes are growing fastest in value?
 - When are home prices typically at their lowest? highest?
-- Which areas fit within a speciic budget using a 20% down payment rule?
+- Which areas fit within a specific budget using a 20% down payment rule?
 
 ## Data Source
 
@@ -19,7 +19,7 @@ This dashboard empowers homebuyers with data-driven insights to make informed de
 
 ## Key Features
 
-- **Seasonal Price Trends** - Monthly home value changes over time and 
+- **Seasonal Price Trends** - Monthly home value changes over time
 - **Growth Analysis** - Year-over-year price increases by zip code and city
 - **Affordability Filters** - Highlights zip codes within budget range
 - **Homebuyer Scenario** - Explore best areas by price, growth, and timing 
