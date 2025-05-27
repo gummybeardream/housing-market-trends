@@ -117,13 +117,13 @@ nulls_by_month = null_rows[null_rows['MedianHomeValue'].isnull()]\
     .reset_index(name='MissingValues')
 #print(nulls_by_month)
 
-#Create dataframe of missing values grouped by state
+#Create dataframe of missing values grouped by state and city
 nulls_by_state = null_rows[null_rows['MedianHomeValue'].isnull()]\
-    .groupby(['State', 'City'])\
+    .groupby(['State', 'City', 'Zipcode'])\
     .size()\
     .reset_index(name='MissingValues')\
     .sort_values(by='MissingValues', ascending=False)
-#print(nulls_by_state.head(10))
+print(nulls_by_state.head(55))
 #print(null_rows.info(show_counts=True))
 
 city_df = null_rows['City'].unique()
