@@ -56,13 +56,13 @@ home_sale_prices_melted = home_sale_prices_melted[~(home_sale_prices_melted['Sta
 
 #Validate that StateName column does not contain United States as a value
 check_state_column = home_sale_prices_melted[home_sale_prices_melted['StateName'].str.contains('United States')]
-print(check_state_column.info())
-print(check_state_column.head(10))
+#print(check_state_column.info())
+#print(check_state_column.head(10))
 
 #Validate that City column does not contain United States as a value
 check_city_column = home_sale_prices_melted[home_sale_prices_melted['City'].str.contains('United States')]
-print(check_city_column.info())
-print(check_city_column.head(10))
+#print(check_city_column.info())
+#print(check_city_column.head(10))
 
 #View dataset
 #print(home_sale_prices_melted.head(10))
@@ -75,17 +75,13 @@ sale_prices_no_nulls = home_sale_prices_melted.dropna()
 
 #Create final dataframe to send to Tableau
 sale_prices_final = sale_prices_no_nulls[['Country', 'RegionID', 'StateName', 'City', 'MedianSalePrice', 'Date', 'Month', 'MonthName', 'Year']]
-print(sale_prices_final.info())
-print(sale_prices_final.head())
+#print(sale_prices_final.info())
+#print(sale_prices_final.head())
 
 #Run to convert dataframe to CSV file when dataset is ready for Tableau
 #sale_prices_final.to_csv("data/processed/sale_prices_final.csv")
 
-
-#Create a dataframe with null values 
-sale_prices_null = home_sale_prices_melted[home_sale_prices_melted.isnull().any(axis=1)]
-#print(sale_prices_null.head())
-#print(sale_prices_null.info())
+#Non-null dataset analysis 
 
 #Plot MedianSalePrice over years (2018-2024) to look at trends. 
 #Create copy of dataframe with only the Year and MedianSalePrices columns
@@ -99,6 +95,35 @@ sale_prices_by_year_avg = sales_prices_columns.groupby(['City', 'Year']).mean().
 #print(sale_prices_by_year_median.head(20))
 #print(sale_prices_by_year_avg.head(20))
 
+#Null dataset analysis 
+#Create a dataframe with null values 
+sale_prices_null = home_sale_prices_melted[home_sale_prices_melted.isnull().any(axis=1)]
+
+#Create dataframe of nulls grouped by month
+nulls_by_month = sale_prices_null[sale_prices_null['MedianSalePrice'].isnull()]\
+    .groupby('Month')\
+    .size()\
+    .reset_index(name='MissingValues')
+#print(nulls_by_month)
+
+#Create dataframe of nulls grouped by state 
+nulls_by_state = sale_prices_null[sale_prices_null['MedianSalePrice'].isnull()]\
+    .groupby('StateName')\
+    .size()\
+    .reset_index(name='MissingValues')\
+    .sort_values(by='MissingValues', ascending =False)
+print(nulls_by_state.info(show_counts=True))
+
+#Create dataframe of nulls grouped by state and city
+nulls_by_state_city = sale_prices_null[sale_prices_null['MedianSalePrice'].isnull()]\
+    .groupby(['StateName','City'])\
+    .size()\
+    .reset_index(name='MissingValues')\
+    .sort_values(by= 'MissingValues', ascending=False)
+#print(nulls_by_state_city.info(show_counts=True))
+
+#print(sale_prices_null.head())
+#print(sale_prices_null.info())
 #To check on whether replacing 6410 null values with city median/mean values will skew the data
 
 
