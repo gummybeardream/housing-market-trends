@@ -81,41 +81,53 @@ sale_prices_final = sale_prices_no_nulls[['Country', 'RegionID', 'StateName', 'C
 #Run to convert dataframe to CSV file when dataset is ready for Tableau
 #sale_prices_final.to_csv("data/processed/sale_prices_final.csv")
 
-#Non-null dataset analysis 
-
-#Plot MedianSalePrice over years (2018-2024) to look at trends. 
-#Create copy of dataframe with only the Year and MedianSalePrices columns
-sales_prices_columns = sale_prices_no_nulls[['Year','City', 'MedianSalePrice']].copy()
-#print(sales_prices_columns.groupby('Year')['MedianSalePrice'].describe())
-
-#Dataframe showing median or average of MedianSalePrice grouped by Year 
-sale_prices_by_year_median = sales_prices_columns.groupby(['City', 'Year']).median().reset_index()
-sale_prices_by_year_avg = sales_prices_columns.groupby(['City', 'Year']).mean().reset_index()
-
-#print(sale_prices_by_year_median.head(20))
-#print(sale_prices_by_year_avg.head(20))
-
 #Null dataset analysis 
 #Create a dataframe with null values 
 sale_prices_null = home_sale_prices_melted[home_sale_prices_melted.isnull().any(axis=1)]
 
+#Count total expected city-month combinations
+total_city_month_counts = home_sale_prices_melted.groupby(['City', 'MonthName'])\
+    .size()\
+    .reset_index(name='CityMonthRows')\
+    .sort_values(by= 'CityMonthRows', ascending= False)
+print(total_city_month_counts.info())
+print(total_city_month_counts.head(10))
+print(total_city_month_counts.shape)
+print(total_city_month_counts['CityMonthRows'].describe())
+print(total_city_month_counts.duplicated(subset=['City', 'MonthName']).sum())
+
+#Count nulls per city-month combination
+nulls_by_city_month = sale_prices_null\
+    .groupby(['City','Month'])\
+    .size()\
+    .reset_index(name= 'NullCityMonth')\
+    .sort_values(by = 'NullCityMonth', ascending =False)
+print(nulls_by_city_month.info())
+print(nulls_by_city_month.head(15))
+print(nulls_by_city_month.shape)
+print(nulls_by_city_month['NullCityMonth'].describe())
+print(nulls_by_city_month.isna().sum())
+
+#Merge and compare total and null city combination lists to filter for combinations that are completely missing 
+#city_month_check = pd.merge(total_city_months, nulls_by_city_month, on = ['City', 'MonthName'], how='left')
+
 #Create dataframe of nulls grouped by month
-nulls_by_month = sale_prices_null[sale_prices_null['MedianSalePrice'].isnull()]\
+nulls_by_month = sale_prices_null\
     .groupby('Month')\
     .size()\
     .reset_index(name='MissingValues')
 #print(nulls_by_month)
 
 #Create dataframe of nulls grouped by state 
-nulls_by_state = sale_prices_null[sale_prices_null['MedianSalePrice'].isnull()]\
+nulls_by_state = sale_prices_null\
     .groupby('StateName')\
     .size()\
     .reset_index(name='MissingValues')\
     .sort_values(by='MissingValues', ascending =False)
-print(nulls_by_state.info(show_counts=True))
+#print(nulls_by_state.info(show_counts=True))
 
 #Create dataframe of nulls grouped by state and city
-nulls_by_state_city = sale_prices_null[sale_prices_null['MedianSalePrice'].isnull()]\
+nulls_by_state_city = sale_prices_null\
     .groupby(['StateName','City'])\
     .size()\
     .reset_index(name='MissingValues')\
