@@ -98,7 +98,7 @@ print(total_city_month_counts.duplicated(subset=['City', 'MonthName']).sum())
 
 #Count nulls per city-month combination
 nulls_by_city_month = sale_prices_null\
-    .groupby(['City','Month'])\
+    .groupby(['City','MonthName'])\
     .size()\
     .reset_index(name= 'NullCityMonth')\
     .sort_values(by = 'NullCityMonth', ascending =False)
@@ -109,7 +109,20 @@ print(nulls_by_city_month['NullCityMonth'].describe())
 print(nulls_by_city_month.isna().sum())
 
 #Merge and compare total and null city combination lists to filter for combinations that are completely missing 
-#city_month_check = pd.merge(total_city_months, nulls_by_city_month, on = ['City', 'MonthName'], how='left')
+city_month_check = pd.merge(total_city_month_counts, nulls_by_city_month, on = ['City', 'MonthName'], how='left')
+#print(city_month_check.head(20))
+
+#Fill NaN with zeros to easily which city-month combos are not missing
+city_month_check['NullCityMonth'] = city_month_check['NullCityMonth'].fillna(0)
+
+#Identify city-month combos that are fully missing by adding a True/False Column 
+city_month_check['AllMissing'] = city_month_check['NullCityMonth'] == city_month_check['CityMonthRows']
+print(city_month_check.head(20))
+
+#Filter out only fully missing city-month combos
+completely_missing_combos = city_month_check[city_month_check['AllMissing']]
+print(completely_missing_combos.info())
+
 
 #Create dataframe of nulls grouped by month
 nulls_by_month = sale_prices_null\
