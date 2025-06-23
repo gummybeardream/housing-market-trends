@@ -68,7 +68,7 @@ check_city_column = home_sale_prices_melted[home_sale_prices_melted['City'].str.
 #print(home_sale_prices_melted.head(10))
 #print(home_sale_prices_melted.info())
 
-#Create dataframe without null values
+#Create dataframe without null values (MAY NOT NEED ANYMORE)
 sale_prices_no_nulls = home_sale_prices_melted.dropna()
 #print(sale_prices_no_nulls.head())
 #print(sale_prices_no_nulls.info())
@@ -98,7 +98,7 @@ print(total_city_month_counts.duplicated(subset=['City', 'MonthName']).sum())
 
 #Count nulls per city-month combination
 nulls_by_city_month = sale_prices_null\
-    .groupby(['City','MonthName'])\
+    .groupby(['City','Month'])\
     .size()\
     .reset_index(name= 'NullCityMonth')\
     .sort_values(by = 'NullCityMonth', ascending =False)
@@ -123,6 +123,14 @@ print(city_month_check.head(20))
 completely_missing_combos = city_month_check[city_month_check['AllMissing']]
 print(completely_missing_combos.info())
 
+missing_by_city = completely_missing_combos\
+    .groupby('City')\
+    .size()\
+    .reset_index(name='TotalMissingCity')\
+    .sort_values(by='TotalMissingCity', ascending=False)
+print(missing_by_city.info())
+print(missing_by_city)
+
 
 #Create dataframe of nulls grouped by month
 nulls_by_month = sale_prices_null\
@@ -136,7 +144,7 @@ nulls_by_state = sale_prices_null\
     .groupby('StateName')\
     .size()\
     .reset_index(name='MissingValues')\
-    .sort_values(by='MissingValues', ascending =False)
+    .sort_values(by='MissingValues', ascending=False)
 #print(nulls_by_state.info(show_counts=True))
 
 #Create dataframe of nulls grouped by state and city
